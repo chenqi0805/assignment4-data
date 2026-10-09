@@ -166,3 +166,7 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 local-shared-data/
+
+# Submission build artifacts
+cs336-assignment4-submission.zip
+test_results.xml
