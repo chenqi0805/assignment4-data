@@ -49,6 +49,10 @@ addopts = "-s"
 
 [tool.ruff]
 line-length = 120
+# Staff-owned scaffold that this assignment never edits (handout forbids
+# modifying scripts/train.py; cs336_basics is staff model code) is exempt
+# from lint so `ruff check .` gates only student-written code.
+extend-exclude = ["cs336_basics", "scripts/train.py", "scripts/generate_with_gpt2_tok.py"]
 
 [tool.ruff.lint.extend-per-file-ignores]
 # Also ignore `E402` in all `__init__.py` files.
