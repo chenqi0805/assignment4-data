@@ -6,6 +6,7 @@ from typing import Any
 from cs336_data.dedup import exact_line_deduplication
 from cs336_data.extraction import extract_text_from_html_bytes
 from cs336_data.gopher import all_gopher_rules_pass
+from cs336_data.minhash import minhash_deduplication
 from cs336_data.pii import mask_emails, mask_ips, mask_phone_numbers
 
 
@@ -59,4 +60,11 @@ def run_minhash_deduplication(
     jaccard_threshold: float,
     output_directory: os.PathLike,
 ):
-    raise NotImplementedError
+    minhash_deduplication(
+        input_files,
+        output_directory,
+        num_hashes=num_hashes,
+        num_bands=num_bands,
+        ngrams=ngrams,
+        jaccard_threshold=jaccard_threshold,
+    )
