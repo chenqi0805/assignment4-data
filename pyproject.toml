@@ -57,6 +57,7 @@ line-length = 120
 [dependency-groups]
 dev = [
     "ipython>=9.13.0",
+    "ruff>=0.16.10",
 ]
 
 [tool.ruff.lint]
