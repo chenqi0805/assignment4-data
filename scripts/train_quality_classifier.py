@@ -33,6 +33,7 @@ import http.client
 import json
 import random
 import re
+import shutil
 import sys
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -123,12 +124,20 @@ def _fetch(url: str, timeout: float) -> bytes | None:
         return None
 
 
+def _download(url: str, path: Path) -> None:
+    """urlretrieve with the script's User-Agent — Wikimedia rejects urllib's default UA (HTTP 403)."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+    with urllib.request.urlopen(request, timeout=60) as response, open(path, "wb") as f:
+        shutil.copyfileobj(response, f)
+
+
 def stage_urls(args: argparse.Namespace) -> Path:
     """Extract external URLs from a bounded subset of the enwiki multistream dump."""
     shard_path = Path(args.shard_path)
     if not shard_path.exists():
         print(f"[urls] downloading {args.shard_url}", flush=True)
-        urllib.request.urlretrieve(args.shard_url, shard_path)
+        _download(args.shard_url, shard_path)
 
     urls = extract_wiki_urls(shard_path)
     random.Random(SEED).shuffle(urls)
