@@ -27,7 +27,13 @@ def extract_text_from_html_bytes(b: bytes | None) -> str | None:
     """
     if b is None:
         return ""
-    html = b.decode(detect_encoding(b))
+    try:
+        html = b.decode(detect_encoding(b))
+    except (UnicodeDecodeError, LookupError):
+        # Handout 2.2: bytes that cannot be decoded yield None rather than raising.
+        # detect_encoding can mislabel content (e.g. utf-8 for cp1252 bytes), so the
+        # decode itself is the point of failure.
+        return None
     html = _COMMENT_RE.sub("", html)
     html = _SCRIPT_RE.sub("", html)
     html = _STYLE_RE.sub("", html)
