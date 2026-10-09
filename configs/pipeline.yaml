@@ -1,0 +1,13 @@
+# Section-4 pipeline defaults. CLI flags on scripts/{filter_data,inspect,tokenize_data}.py override these.
+filter_data:
+  num_hashes: 100
+  num_bands: 10
+  ngrams: 5
+  jaccard_threshold: 0.8
+  quality_threshold: 0.5
+  workers: 1
+inspect:
+  samples: 5
+  seed: 336
+tokenize_data:
+  tokenizer: gpt2
