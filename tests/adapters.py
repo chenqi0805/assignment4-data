@@ -4,6 +4,7 @@ import os
 from typing import Any
 
 from cs336_data.extraction import extract_text_from_html_bytes
+from cs336_data.gopher import all_gopher_rules_pass
 from cs336_data.pii import mask_emails, mask_ips, mask_phone_numbers
 
 
@@ -40,7 +41,7 @@ def run_classify_quality(text: str) -> tuple[Any, float]:
 
 
 def run_gopher_quality_filter(text: str) -> bool:
-    raise NotImplementedError
+    return all_gopher_rules_pass(text)
 
 
 def run_exact_line_deduplication(
