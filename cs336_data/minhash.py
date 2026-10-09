@@ -134,6 +134,23 @@ def _kept_indices(
     return {rng.choice(members) for members in clusters.values()}
 
 
+def deduplicate_document_indices(
+    docs: list[str],
+    num_hashes: int,
+    num_buckets: int,
+    ngrams: int = DEFAULT_NGRAMS,
+    threshold: float | None = None,
+) -> set[int]:
+    """Indices of the documents that survive LSH MinHash deduplication.
+
+    One document per transitive near-duplicate cluster survives, so the
+    returned indices are index-preserving handles on the input order.
+    """
+    if threshold is None:
+        _, threshold = parameters(num_hashes, num_buckets)
+    return _kept_indices(docs, num_hashes, num_buckets, ngrams, threshold)
+
+
 def deduplicate_documents_minhash(
     docs: list[str],
     num_hashes: int,
@@ -146,9 +163,7 @@ def deduplicate_documents_minhash(
     Without an explicit threshold, the banding scheme's approximate threshold
     (see parameters) is used. Survivors keep their original relative order.
     """
-    if threshold is None:
-        _, threshold = parameters(num_hashes, num_buckets)
-    kept = _kept_indices(docs, num_hashes, num_buckets, ngrams, threshold)
+    kept = deduplicate_document_indices(docs, num_hashes, num_buckets, ngrams, threshold)
     return [doc for doc_idx, doc in enumerate(docs) if doc_idx in kept]
 
 

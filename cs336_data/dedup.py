@@ -17,13 +17,23 @@ import mmh3
 from xopen import xopen
 
 
+def deduplicate_document_indices(docs: list[str]) -> list[int]:
+    """Indices of the documents that survive drop-all exact deduplication.
+
+    A document survives when it is non-empty and appears exactly once; the
+    returned indices keep the original relative order. Index-preserving so
+    callers can recover provenance for the survivors.
+    """
+    counts = Counter(docs)
+    return [idx for idx, doc in enumerate(docs) if doc and counts[doc] == 1]
+
+
 def deduplicate_documents_exact(docs: list[str]) -> list[str]:
     """Drop every document appearing more than once and every empty document.
 
     Survivors keep their original relative order.
     """
-    counts = Counter(docs)
-    return [doc for doc in docs if doc and counts[doc] == 1]
+    return [docs[idx] for idx in deduplicate_document_indices(docs)]
 
 
 def _line_key(line: str) -> int:
